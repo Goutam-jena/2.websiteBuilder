@@ -35,25 +35,26 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ======================
-// CORS Setup
+// CORS Setup (Production Ready)
 // ======================
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://2-website-builder.vercel.app"
+  "https://2-website-builder-wa4f.vercel.app" // your main frontend
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
+      // allow Postman / mobile apps
       if (!origin) return callback(null, true);
 
-      // Exact match
+      // exact match
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
 
-      // Allow all Vercel preview deployments
-      if (origin.endsWith(".vercel.app")) {
+      // allow all Vercel preview deployments
+      if (origin && origin.endsWith(".vercel.app")) {
         return callback(null, true);
       }
 
@@ -72,14 +73,14 @@ app.use("/api/website", websiteRouter);
 app.use("/api/billing", billingRouter);
 
 // ======================
-// Test Route
+// Health Check Route
 // ======================
 app.get("/", (req, res) => {
   res.send("Backend is running successfully 🚀");
 });
 
 // ======================
-// Start Server (IMPORTANT)
+// Start Server (Important for Render)
 // ======================
 app.listen(PORT, "0.0.0.0", async () => {
   console.log(`Server running on port ${PORT}`);
