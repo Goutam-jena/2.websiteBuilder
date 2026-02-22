@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
@@ -11,12 +12,14 @@ import Pricing from "./pages/Pricing";
 import useGetCurrentUser from "./hooks/useGetCurrentUser";
 
 // ======================
-// Backend URL (Render)
+// IMPORTANT: Send cookies to backend
 // ======================
+axios.defaults.withCredentials = true;
+
+// Backend URL (Render)
 export const serverUrl = "https://two-websitebuilder-wlj4.onrender.com";
 
 function App() {
-  // Fetch current user on app load
   useGetCurrentUser();
 
   const { userData } = useSelector((state) => state.user);
@@ -45,7 +48,6 @@ function App() {
           element={userData ? <WebsiteEditor /> : <Navigate to="/" />}
         />
 
-        {/* Fallback route (optional but good) */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
